@@ -62,13 +62,17 @@
                 </ul>
               </li>
             </ul>
-            <form class="navbar-form pull-right" action="{% url 'facebook_connect' %}?facebook_login=1" method="post">
-                    {% csrf_token %}
-                    <a  href="javascript:void(0);" style="font-size: 20px;" onclick="F.connect(this.parentNode);">Connect with Facebook</a>
-                    <input type="hidden" value="{% url 'main.views.user_panel' %}" name="next" />
-                    <input type="hidden" value="{{ request.path }}" name="register_next" />
-                    <input type="hidden" value="{{ request.path }}" name="error_next" />
-            </form>
+            {% if request.user.is_authenticated %}
+                <span class="pull-right" style="color:white;">{{ user.username }}</span>
+            {% else %} 
+                <form class="navbar-form pull-right" action="{% url 'facebook_connect' %}?facebook_login=1" method="post">
+                        {% csrf_token %}
+                        <a  href="javascript:void(0);" style="font-size: 20px;" onclick="F.connect(this.parentNode);">Connect with Facebook</a>
+                        <input type="hidden" value="{% url 'main.views.user_panel' %}" name="next" />
+                        <input type="hidden" value="{{ request.path }}" name="register_next" />
+                        <input type="hidden" value="{{ request.path }}" name="error_next" />
+                </form>
+            {% endif %}
           </div><!--/.nav-collapse -->
         </div>
       </div>

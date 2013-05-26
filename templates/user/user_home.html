@@ -10,7 +10,9 @@
             <div>
                 <h1>My Projects</h1>
                 {% if started_projects %}
-                    
+                    {% for p in started_projects %}
+                    <a href="{{ p.get_absolute_url }}">{{ p.title }}</a>
+                    {% endfor %}
                 {% else %}
                     <h2>You have not started any projects? Please tell me you have something worth your life!</h2>
                 {% endif %}

@@ -3,8 +3,11 @@
 {% block content %}
     <div class="row">
         <div class="span4">
+            Views: 2304
             About the project owner
-
+            {{ project.owner.userprofile.description }}
+            Started projects: {{ project.owner.userprofile.get_started_projects|length }}
+            Involved projects" {{ project.owner.userprofile.get_involved_projects|length }}
         </div>
         <div class="span8">
             <form>
