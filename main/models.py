@@ -1,6 +1,6 @@
 from django.db import models
-#from django.contrib.auth.models import User
-from settings import AUTH_USER_MODEL as User
+from django.conf import settings 
+from django.core.urlresolvers import reverse
 
 import uuid
 
@@ -26,16 +26,23 @@ roles = (
 )
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL)
     description = models.TextField()
     reputation_points = models.IntegerField(default= 0)
 
     def __unicode__(self):
         return self.user.username
-
+    
+    def get_started_projects(self):
+        projects = Project.objects.filter(owner = self.user)
+        return projects
+    def get_involved_projects(self):
+        projects = Project.objects.filter(projectmember = self.user)
+        return projects
+    
 class Project(models.Model):
     status = models.IntegerField(choices = status_choice)
-    owner = models.ForeignKey(User)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name = 'owner')
     start_date  = models.DateField(auto_now_add = True)
     duration_month = models.IntegerField()
 
@@ -44,7 +51,13 @@ class Project(models.Model):
     requirement = models.TextField() 
 
     category = models.IntegerField(choices = category) 
-    members = models.ManyToManyField(User, through = "ProjectMember")
+    members = models.ManyToManyField(settings.AUTH_USER_MODEL, through = "ProjectMember")
+
+    def get_application(self):
+        return self.memberapplication_set
+
+    def get_absolute_url(self):
+        return '/project/%i/' %self.pk
 
     def __unicode__(self):
         return self.title
@@ -53,8 +66,8 @@ class UserReview(models.Model):
     rating = models.BooleanField()
     comments = models.TextField(null = True, blank = True)  
     project  = models.ForeignKey(Project)
-    user = models.ForeignKey(User)
-    date = models.DateField(auto_add_now = True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    date = models.DateField(auto_now_add = True)
 
 
 def generate_fn(instance, filename):
@@ -63,9 +76,9 @@ def generate_fn(instance, filename):
 
 class MemberApplication(models.Model):
     status_choice = ( (1, 'Pending'), (2, 'Rejected'), (3, 'approved'), )
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
     project = models.ForeignKey(Project)
-    date_submitted = models.DateField(auto_add_now = True)
+    date_submitted = models.DateField(auto_now_add = True)
     status = models.IntegerField(choices = status_choice)
 
     def approve_application(self):
@@ -82,9 +95,9 @@ class MemberApplication(models.Model):
 
 class ProjectMember(models.Model):
     project = models.ForeignKey(Project)
-    member = models.ForeignKey(User)
-    join_date = models.DateField(auto_add_now = True)
-    role = models.IntegerField(choice =  roles)
+    member = models.ForeignKey(settings.AUTH_USER_MODEL)
+    join_date = models.DateField(auto_now_add = True)
+    role = models.IntegerField(choices =  roles)
 
 class ProjectUpdate(models.Model):
     project = models.ForeignKey(Project)

@@ -1,0 +1,29 @@
+{% extends "page_skeleton.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="span4">
+            About the project owner
+
+        </div>
+        <div class="span8">
+            <form>
+                <input type="hidden" value="{{ project.pk }}" name="project"/> 
+                <input type="submit" value="Apply for position"></input>
+            </form>
+                <div>Category - {{ project.get_category_display }}</div>
+                <h1>{{ project.title }}</h1>
+                <div>
+                    {{ project.description }}
+                </div>
+                <div>
+                    {{ project.requirement }}
+                </div>
+                
+
+            <div>
+                Project Updates and Discussions
+            </div>
+        </div>
+    </div>
+{% endblock content %}

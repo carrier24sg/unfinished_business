@@ -1,0 +1,38 @@
+{% extends "page_skeleton.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="span4">
+             
+        </div>
+        <div class="span8">
+            <a href="#">Create a "unfinished" project</a>
+            <div>
+                <h1>My Projects</h1>
+                {% if started_projects %}
+                    
+                {% else %}
+                    <h2>You have not started any projects? Please tell me you have something worth your life!</h2>
+                {% endif %}
+            <div>
+            <hr>
+            <div>
+                <h1>Projects I'm Involved</h1>
+                {% if involved_projects %}
+                    
+                {% else %}
+                    <h2>You are not involved in any projects right now. Find one</h2>
+                {% endif %}
+            </div>
+            <hr>
+            <div>
+                <h1>Projects I'm Observing</h1> 
+                {% if observe_projects %}
+
+                {% else %}
+                    <h2>You are not observing any projects right now. Find one</h2>
+                {% endif %}
+            </div>   
+        </div>
+    </div>
+{% endblock content %}
